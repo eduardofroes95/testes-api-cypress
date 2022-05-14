@@ -88,8 +88,20 @@ describe('Testes da Funcionalidade Usuários', () => {
                })
      });
 
-     it('Deve deletar um usuário previamente cadastrado', () => {
+     it.only('Deve deletar um usuário previamente cadastrado', () => {
           //TODO: 
+          let newusuario = `Eduardo ${Math.floor(Math.random() * 1000)}`
+          let newemail = `beltrano${Math.floor(Math.random() * 1000)}@qa.com.br`
+          cy.cadastrarUsuario(token, newusuario, newemail, "teste")
+               .then(response => {
+                    let id = response.body._id
+
+                    cy.request({
+                         method: 'DELETE',
+                         url: `/usuarios/${id}`,
+                         headers: { authorization: token },
+                    })
+               })
      });
 
 
