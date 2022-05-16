@@ -30,17 +30,10 @@ describe('Testes da Funcionalidade Usuários', () => {
      it('Deve cadastrar um usuário com sucesso', () => {
           //TODO: 
           let newusuario = `Eduardo ${Math.floor(Math.random() * 1000)}`
-          cy.request({
-               method: 'POST',
-               url: '/usuarios',
-               body: {
-                    "nome": newusuario,
-                    "email": `beltrano${Math.floor(Math.random() * 1000)}@qa.com.br`,
-                    "password": "teste",
-                    "administrador": "true"
-               },
-               headers: { authorization: token }
-          }).then(response => {
+          let newemail = `beltrano${Math.floor(Math.random() * 1000)}@qa.com.br`
+          cy.cadastrarUsuario(token, newusuario, newemail, "teste")
+               .then(response => {
+                    let id = response.body._id
                expect(response.body.message).to.equal('Cadastro realizado com sucesso')
                expect(response.status).to.equal(201)
           })
@@ -54,7 +47,7 @@ describe('Testes da Funcionalidade Usuários', () => {
                url: '/usuarios',
                body: {
                     "nome": newusuario,
-                    "email": `beltrano${Math.floor(Math.random() * 1000)}`,
+                    "email": `beltrano$email.com`,
                     "password": "teste",
                     "administrador": "true"
                },
@@ -84,11 +77,14 @@ describe('Testes da Funcionalidade Usuários', () => {
                               "password": "teste",
                               "administrador": "true"
                          }
+                    }).then(response => {
+                         expect(response.body.message).to.equal('Registro alterado com sucesso')
+                         expect(response.status).to.equal(200)
                     })
                })
      });
 
-     it.only('Deve deletar um usuário previamente cadastrado', () => {
+     it('Deve deletar um usuário previamente cadastrado', () => {
           //TODO: 
           let newusuario = `Eduardo ${Math.floor(Math.random() * 1000)}`
           let newemail = `beltrano${Math.floor(Math.random() * 1000)}@qa.com.br`
@@ -100,6 +96,9 @@ describe('Testes da Funcionalidade Usuários', () => {
                          method: 'DELETE',
                          url: `/usuarios/${id}`,
                          headers: { authorization: token },
+                    }).then(response => {
+                         expect(response.body.message).to.equal('Registro excluído com sucesso')
+                         expect(response.status).to.equal(200)
                     })
                })
      });
